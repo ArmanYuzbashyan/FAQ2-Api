@@ -10,25 +10,24 @@ namespace  FAQ2_Api.Controllers
 {
     [Route("api/Groups")]
     [ApiController]
-    public class GroupsController : FirstController
-    {
+    
+    public class GroupsController : ControllerBase
+    {   
         
-        
-
         [HttpGet]
         public  IEnumerable<Group> GetGroups()
         {
-            return  Groups;
+            return  AG.Groups;
         }
 
 
         [HttpGet("{id}")]
         public async Task<IEnumerable<Group>> Get(int id)       //Fing a group with id matching
         {
-            var group = (IEnumerable<Group>)Groups;
+            var group = (IEnumerable<Group>)AG.Groups;
             await Task.Run(() =>
             {
-                var tempg = from g in Groups.AsParallel() where g.Id == id select g;
+                var tempg = from g in AG.Groups.AsParallel() where g.Id == id select g;
                 group = tempg;
             });
 
@@ -36,16 +35,39 @@ namespace  FAQ2_Api.Controllers
 
         }
         // POST api/<ValuesController>
-        [HttpPost]
-        public void Post([FromBody] string value)
+        [HttpPost] // [HttpPost("{id}")]
+        public async Task<IEnumerable<Group>> PostGroup(Group group)//PostGroup(int id, Group group) 
         {
+            await Task.Run(()=> {
+                //group.Id = id;
+                AG.Groups.Add(group);
+            
+            });
+
+            return AG.Groups;
         }
 
-        // PUT api/<ValuesController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<Group> PutGroup(int id, Group group)
         {
+            await Task.Run(() =>
+            {
+                Parallel.ForEach(AG.Groups, g =>
+                {
+                    if (id == g.Id)
+                    {
+                        g.GroupName = group.GroupName;
+                    }
+                });
+            });
+            return group;
         }
+
+        //// PUT api/<ValuesController>/5
+        //[HttpPut("{id}")]
+        //public void Put(int id, [FromBody] string value)
+        //{
+        //}
 
         // DELETE api/<ValuesController>/5
         [HttpDelete("{id}")]

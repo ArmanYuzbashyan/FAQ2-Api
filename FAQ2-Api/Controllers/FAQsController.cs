@@ -10,57 +10,74 @@ namespace FAQ2_Api.Controllers
 {
     [Route("api/FAQs")]
     [ApiController]
-    public class FAQsController : FirstController
-    {
-        // GET: api/<FAQsController>
+
+    public class FAQsController : ControllerBase
+    {       
         [HttpGet]
-        public   async Task<IEnumerable<FAQ>> GetFAQs() //verncum em bolor group-eri Q,A-nery,
-        {                                               //miaclnum em mi Listi mej u veradardznum ayd Listy
-            var fAQs = new List<FAQ> { };
-            await Task.Run(() =>
-            {
-                Parallel.ForEach(Groups, g => 
-                {
-                    fAQs.AddRange(g.FAQs);
-                });
-            });
-            return fAQs;
+        public async Task<IEnumerable<FAQ>> GetFAQs()
+        {
+            //AG.GetAllFAQs-y metoda Context.cs-i mej
+            return await AG.GetAllFAQs();
         }
 
-        // GET api/<FAQsController>/5
         [HttpGet("{id}")]
-        public async Task<IEnumerable<FAQ>> GetFAQ(int id, int groupId)
-        {
-            IEnumerable<FAQ> fAQ = new List<FAQ> { };  // gitem, vor petq chi senc cast-er anel
-            var fAQs = new List<FAQ> { };              // bayc de senc stacvav  ¯\_(ツ)_/¯
 
+        public async Task<FAQ> GetFAQ(int id)
+        {    //es metody tramabanoren sxala ashxatelu                                          
+            var fAQs = await AG.GetAllFAQs();
+            var faq = new FAQ();
             await Task.Run(() =>
             {
-                Parallel.ForEach(Groups, g =>
-                {
-                    fAQs.AddRange(g.FAQs);
-                });
-                fAQ = from f in fAQs.AsParallel()
-                            where id == f.Id && groupId == f.GroupId
-                            select f;                
+                Parallel.ForEach(fAQs, f =>
+               {
+                   if (id == f.Id)
+                       faq = f;
+               });
             });
+            return faq;
+        }
+                
+        [HttpPost]
+        public async Task<IEnumerable<Group>> PostFAQ([FromBody] FAQ faq)
+        {
+            await Task.Run(() => {
+                foreach (Group g in AG.Groups)
+                {
+                    if (g.Id == faq.GroupId)
+                        g.FAQs.Add(faq);
+                }
+            });
+
+            return AG.Groups;
+        }
+        [HttpPut("{id}")]
+        public async Task<FAQ> PutFAQ(int id, FAQ fAQ)
+        {
+            await Task.Run(() =>
+            {
+                Parallel.ForEach(AG.Groups, g =>
+               {
+                   if (fAQ.GroupId == g.Id)
+                   {
+                       Parallel.ForEach(g.FAQs, f =>
+                       {
+                         if (f.Id == id && f.GroupId == fAQ.GroupId)
+                         {
+                               f.Id = fAQ.Id;
+                               f.Question = fAQ.Question;
+                               f.Answer = fAQ.Answer;
+                                                             
+                         }
+                       });
+                   }
+               });
+            });    
             return fAQ;
         }
+                  
 
-        // POST api/<FAQsController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/<FAQsController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<FAQsController>/5
-        [HttpDelete("{id}")]
+            // DELETE api/<FAQsController>/5
+            [HttpDelete("{id}")]
         public void Delete(int id)
         {
         }
