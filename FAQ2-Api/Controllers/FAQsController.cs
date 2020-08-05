@@ -23,7 +23,7 @@ namespace FAQ2_Api.Controllers
         [HttpGet("{id}")]
 
         public async Task<FAQ> GetFAQ(int id)
-        {    //es metody tramabanoren sxala ashxatelu                                          
+        {                                              
             var fAQs = await AG.GetAllFAQs();
             var faq = new FAQ();
             await Task.Run(() =>
@@ -50,13 +50,33 @@ namespace FAQ2_Api.Controllers
 
             return AG.Groups;
         }
+
+        [HttpDelete("{id}")]
+        public async void DeleteFAQ(int id, int gid) // Group.id !!!!
+        {
+            
+            await Task.Run(() => {
+                Parallel.ForEach(AG.Groups, g =>
+                {
+                    if (g.Id == gid)
+                        Parallel.ForEach(g.FAQs, f =>
+                        {
+                            if (f.Id == id)
+                            {
+                                g.FAQs.Remove(f);
+                            }
+                        });
+                });
+            });
+        }
+
         [HttpPut("{id}")]
-        public async Task<FAQ> PutFAQ(int id, FAQ fAQ)
+        public async void PutFAQ(int id, FAQ fAQ)
         {
             await Task.Run(() =>
             {
                 Parallel.ForEach(AG.Groups, g =>
-               {
+                {
                    if (fAQ.GroupId == g.Id)
                    {
                        Parallel.ForEach(g.FAQs, f =>
@@ -70,16 +90,8 @@ namespace FAQ2_Api.Controllers
                          }
                        });
                    }
-               });
-            });    
-            return fAQ;
-        }
-                  
-
-            // DELETE api/<FAQsController>/5
-            [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+                });
+            });               
+        } 
     }
 }

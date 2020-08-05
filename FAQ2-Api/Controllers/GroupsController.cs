@@ -47,8 +47,20 @@ namespace  FAQ2_Api.Controllers
             return AG.Groups;
         }
 
+        [HttpDelete("{id}")]
+        public async void DeleteGroup(int id)
+        {
+            await Task.Run(() => {
+                Parallel.ForEach(AG.Groups, g =>
+                {
+                    if (g.Id == id)
+                        AG.Groups.Remove(g);
+                });
+            });
+        }
+
         [HttpPut("{id}")]
-        public async Task<Group> PutGroup(int id, Group group)
+        public async void PutGroup(int id, Group group)
         {
             await Task.Run(() =>
             {
@@ -56,23 +68,13 @@ namespace  FAQ2_Api.Controllers
                 {
                     if (id == g.Id)
                     {
-                        g.GroupName = group.GroupName;
+                        g.GroupName = group.GroupName; // NO FAQs !!!!
                     }
                 });
             });
-            return group;
         }
 
-        //// PUT api/<ValuesController>/5
-        //[HttpPut("{id}")]
-        //public void Put(int id, [FromBody] string value)
-        //{
-        //}
-
-        // DELETE api/<ValuesController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+                
+        
     }
 }
