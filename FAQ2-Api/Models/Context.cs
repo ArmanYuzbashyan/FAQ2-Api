@@ -12,11 +12,12 @@ namespace FAQ2_Api.Models
             new Group {  Id = 0, GroupName = "JOJO",
                 FAQs = new List<FAQ> {new FAQ{ Id = 0, Question = "q1", Answer = "a1",GroupId = 0 },
                                       new FAQ{ Id = 1, Question = "q2", Answer = "a2",GroupId = 0 }
-                }
+                } // test anelu hamar em hardcode arel, piti datark { } lini
             }
         };
-        public static async Task<IEnumerable<FAQ>> GetAllFAQs() 
-        {   // irar em miacnum bolor group-eri mijic FAQ-ery, vorpes list                                          
+        public static async Task<List<FAQ>> GetAllFAQs() 
+        {   // irar em miacnum bolor group-eri mijic FAQ-ery, vorpes list  
+            // controllerneri mej shata petq 
             var fAQs = new List<FAQ> { };
             await Task.Run(() =>
             {
