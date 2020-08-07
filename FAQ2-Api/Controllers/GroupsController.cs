@@ -16,101 +16,88 @@ namespace  FAQ2_Api.Controllers
         
         [HttpGet] // Context.cs-i mej haytararel em static List <group> AG.Groups prop,
                   //dra mej a amboxj informacias
-        public  IEnumerable<Group> GetGroups()
+        public  List<Group> GetGroups()
         {
             return  AG.Groups;
         }
 
-        [HttpGet("{search}")] // https://localhost:44346/api/Groups/"search" -- filter em anum anunnerov
-        public async Task<IEnumerable<Group>> GetFAQsSearch(string search)
+        [HttpGet("{search}")] // "search" -- filter em anum anunnerov
+        public async Task<List<Group>> GetFAQsSearch(string search)
         {            
             var gn = new List<Group> { };
-            await Task.Run(() => {
-                Parallel.ForEach(AG.Groups, g => {
-                if (g.GroupName.Contains(search))
-                    gn.Add(g);
-                });
+            await Task.Run(() =>
+            {                
+                foreach (Group g in AG.Groups)
+                {
+                    if (g.GroupName.Contains(search))
+                        gn.Add(g);
+                };
             });
             return gn;
 
-        }
-
-
-        //[HttpGet("{id}")] // id-ov search
-        //public async Task<IEnumerable<Group>> Get(int id)       
-        //{
-        //    var group = (IEnumerable<Group>)AG.Groups;
-        //    await Task.Run(() =>
-        //    {
-        //        var tempg = from g in AG.Groups.AsParallel() where g.Id == id select g;
-        //        group = tempg;
-        //    });
-
-        //    return group;
-
-        //}
-
-
-
-        //[HttpPost]  // id-n uxxaki propa stex
-        //public async Task<IEnumerable<Group>> PostGroup(Group group)//PostGroup(int id, Group group) 
-        //{
-        //    await Task.Run(()=> {
-        //        //group.Id = id;
-        //        AG.Groups.Add(group);
-
-        //    });
-
-        //    return AG.Groups;
-        //}
-
-
+        }         
+        
         [HttpPost]  // normal id -ov post em anum trvac group-y AG.Groups-i mej
-        public async Task<IEnumerable<Group>> PostGroup(Group group) 
+        public async Task<ActionResult<List<Group>>> PostGroup(Group group) 
         {
-            await Task.Run(() => {
-                //group.Id = id;
-                group.Id = AG.Groups.Count();
-                foreach (FAQ f in group.FAQs)
-                {
-                    f.GroupId = group.Id;
-                }
-                AG.Groups.Add(group);
-
+            if (group.GroupName == null)
+                return BadRequest();
+            bool done = false;
+            group.Id = AG.Groups.Count();
+            await Task.Run(() =>
+            { 
+                AG.Groups.Add(group);//(new Group { GroupName = group.GroupName }); 
+                done = true;
             });
-
-            return AG.Groups;
+            if (done == false)
+                return BadRequest();
+            else return AG.Groups;
         }
 
 
 
 
         [HttpDelete("{id}")] // AG.Groups-ic trvac id-ov groupy jnjum em
-        public async void DeleteGroup(int id)
+        public async Task<String> DeleteGroup(int id)
         {
+            bool done = false;
             await Task.Run(() => {
-                Parallel.ForEach(AG.Groups, g =>
+                foreach (Group g in AG.Groups)
                 {
                     if (g.Id == id)
+                    {
                         AG.Groups.Remove(g);
-                });
+                        done = true;
+                        break;
+                    }
+                };
             });
+            if (!done) return "not exists" ;
+            else return "deleted";
         }
 
         [HttpPut("{id}")] // Trvac id-ov group-i anunn em poxum,,
                           //Questionneroi het gorc chunenq stex
-        public async void PutGroup(int id, Group group)
+        public async Task<ActionResult<List<Group>>> PutGroup(int id, Group group)
         {
+            bool done = false;
+            if (id <= 0 || group.GroupName == null || group.FAQs.Count != 0) // NO FAQS 
+                return BadRequest();
+
             await Task.Run(() =>
-            {
-                Parallel.ForEach(AG.Groups, g =>
+            {                
+                foreach (Group g in AG.Groups)
                 {
                     if (id == g.Id)
                     {
-                        g.GroupName = group.GroupName; // NO FAQs !!!!
+                        g.GroupName = group.GroupName;                        
+                        done = true;
+                        break;// NO FAQs !!!!
                     }
-                });
+                };
             });
+            if (!done) return BadRequest();
+            else return AG.Groups;
         }              
         
     }
