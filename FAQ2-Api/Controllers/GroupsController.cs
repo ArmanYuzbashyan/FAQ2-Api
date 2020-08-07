@@ -49,7 +49,14 @@ namespace  FAQ2_Api.Controllers
             if (group.GroupName == null)
                 return BadRequest();
             bool done = false;
-            group.Id = AG.Groups.Count();
+
+            List<IdAble> IdAbleGroup = new List<IdAble> { };
+            foreach (Group g in AG.Groups)
+            {
+                IdAbleGroup.Add(g);
+            }
+
+            group.Id = MakeId.NewId(IdAbleGroup);
             await Task.Run(() =>
             { 
                 AG.Groups.Add(group);//(new Group { GroupName = group.GroupName }); 

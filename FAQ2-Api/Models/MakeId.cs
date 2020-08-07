@@ -5,67 +5,67 @@ using System.Threading.Tasks;
 
 namespace FAQ2_Api.Models
 {
-    public static class MakeId
-    {
-        public static int NewId(List<FAQ> source) // generic-ov convert-i xndir em unenum
-        {
-            int id = 1;
-
-            if (source.Count == 0)
-            {
-                return id;
-            }
-            foreach (FAQ s in source)
-            {
-                if (s.Id > id)
-                {
-                    id = s.Id;
-                }
-            }
-            return id + 1;
-        }
-        public static int NewId(List<Group> source)
-        {
-            int id = 1;
-
-            if (source.Count == 0)
-            {
-                return id;
-            }
-
-            foreach (Group s in source)
-            {
-                if (s.Id > id)
-                {
-                    id = s.Id;
-                }
-            }
-            return id + 1;
-        }
-    }
-
     //public static class MakeId
     //{
-    //    public static int NewId (List<IdAble> source)
+    //    public static int NewId(List<FAQ> source) // generic-ov convert-i xndir em unenum
     //    {
     //        int id = 1;
+
     //        if (source.Count == 0)
-    //        {                
+    //        {
     //            return id;
     //        }
-    //        foreach (IdAble s in source)
+    //        foreach (FAQ s in source)
     //        {
     //            if (s.Id > id)
     //            {
     //                id = s.Id;
     //            }
     //        }
-    //        return id;
+    //        return id + 1;
+    //    }
+    //    public static int NewId(List<Group> source)
+    //    {
+    //        int id = 1;
+
+    //        if (source.Count == 0)
+    //        {
+    //            return id;
+    //        }
+
+    //        foreach (Group s in source)
+    //        {
+    //            if (s.Id > id)
+    //            {
+    //                id = s.Id;
+    //            }
+    //        }
+    //        return id + 1;
     //    }
     //}
-    //public class IdAble
-    //{
-    //    public int Id { get; set; }
-    //}
+
+    public static class MakeId
+    {
+        public static int NewId(List<IdAble> source)
+        {
+            int id = 1;
+            if (source.Count == 0)
+            {
+                return id;
+            }
+            foreach (IdAble s in source)
+            {
+                if (s.Id > id)
+                {
+                    id = s.Id;
+                }
+            }
+            return id+1;
+        }
+    }
+    public class IdAble
+    {
+        public int Id { get; set; }
+    }
 
 }

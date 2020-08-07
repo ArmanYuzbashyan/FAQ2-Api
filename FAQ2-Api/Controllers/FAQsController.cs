@@ -39,7 +39,11 @@ namespace FAQ2_Api.Controllers
         public async Task<ActionResult<List<Group>>> PostFAQ(FAQ faq)        
         {
             var a = await AG.GetAllFAQs();
-            faq.Id = MakeId.NewId(a);  // !!!!!  
+            var a1 = new List<IdAble> { };
+
+            foreach (FAQ f in a) { a1.Add(f); }
+
+            faq.Id = MakeId.NewId(a1);  // !!!!!  
 
             if (faq.Answer == null || faq.Question == null || faq.GroupId <= 0)
                 return BadRequest();
