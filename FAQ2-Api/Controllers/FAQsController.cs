@@ -38,18 +38,20 @@ namespace FAQ2_Api.Controllers
         [HttpPost] // id-n normal Identificator a stex
         public async Task<ActionResult<List<Group>>> PostFAQ(FAQ faq)        
         {
-            var a = await AG.GetAllFAQs();
-            var a1 = new List<IdAble> { };
-
-            foreach (FAQ f in a) { a1.Add(f); }
-
-            faq.Id = MakeId.NewId(a1);  // !!!!!  
+            
 
             if (faq.Answer == null || faq.Question == null || faq.GroupId <= 0)
                 return BadRequest();
             bool done = false;
+            var a = await AG.GetAllFAQs();
             await Task.Run(() => 
             {                
+                var a1 = new List<IdAble> { };
+
+                foreach (FAQ f in a) { a1.Add(f); }
+
+                faq.Id = MakeId.NewId(a1);  // !!!!!  
+
                 foreach (Group g in AG.Groups)                
                 {
                     if (g.Id == faq.GroupId)
