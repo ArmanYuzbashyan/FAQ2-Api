@@ -28,9 +28,8 @@ namespace FAQ2_Api.Controllers
             {                
                 foreach (FAQ f in faqs)
                 {
-                    if (f.Question.Contains(search))                    
-                        fq.Add(f);                       
-                    
+                    if (f.Question.MySearch(search, StringComparison.CurrentCultureIgnoreCase))                 
+                        fq.Add(f);                    
                 };
             });
             return fq;
@@ -45,8 +44,8 @@ namespace FAQ2_Api.Controllers
             if (faq.Answer == null || faq.Question == null || faq.GroupId <= 0)
                 return BadRequest();
             bool done = false;
-            await Task.Run(() => {
-                
+            await Task.Run(() => 
+            {                
                 foreach (Group g in AG.Groups)                
                 {
                     if (g.Id == faq.GroupId)

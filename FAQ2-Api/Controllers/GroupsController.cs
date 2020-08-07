@@ -29,8 +29,14 @@ namespace  FAQ2_Api.Controllers
             {                
                 foreach (Group g in AG.Groups)
                 {
-                    if (g.GroupName.Contains(search))
+                    if (g.GroupName.MySearch(search, StringComparison.CurrentCultureIgnoreCase))
                         gn.Add(g);
+
+                    // primitive variant
+                    // var lowG = g.GroupName.ToLower();
+                    // var lowS = search.ToLower();
+                    // if (lowG.Contains(lowS))
+                    //    gn.Add(g);
                 };
             });
             return gn;
@@ -53,9 +59,6 @@ namespace  FAQ2_Api.Controllers
                 return BadRequest();
             else return AG.Groups;
         }
-
-
-
 
         [HttpDelete("{id}")] // AG.Groups-ic trvac id-ov groupy jnjum em
         public async Task<String> DeleteGroup(int id)
