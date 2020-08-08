@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using FAQ2_Api.Models;
 using Microsoft.JSInterop.Infrastructure;
+using FAQ2_Api.Models.Methods;
 
 namespace FAQ2_Api.Controllers
 {
@@ -21,113 +22,43 @@ namespace FAQ2_Api.Controllers
 
         [HttpGet("{search}")] // api/Faqs/"search", 
         public async Task<ActionResult<List<FAQ>>> GetFAQsSearch(string search)
-        {
-            var faqs = await AG.GetAllFAQs();
-            var fq = new List<FAQ> { };
-            await Task.Run(() => 
-            {                
-                foreach (FAQ f in faqs)
-                {
-                    if (f.Question.MySearch(search, StringComparison.CurrentCultureIgnoreCase))                 
-                        fq.Add(f);                    
-                };
-            });
-            return fq;
+        {            
+            return await FAQActions.GetFAQsSearch(search);
         }        
 
-        [HttpPost] // id-n normal Identificator a stex
+        [HttpPost] 
         public async Task<ActionResult<List<Group>>> PostFAQ(FAQ faq)        
-        {
-            
-
+        {  
             if (faq.Answer == null || faq.Question == null || faq.GroupId <= 0)
                 return BadRequest();
-            bool done = false;
-            var a = await AG.GetAllFAQs();
-            await Task.Run(() => 
-            {                
-                var a1 = new List<IdAble> { };
 
-                foreach (FAQ f in a) { a1.Add(f); }
-
-                faq.Id = MakeId.NewId(a1);  // !!!!!  
-
-                foreach (Group g in AG.Groups)                
-                {
-                    if (g.Id == faq.GroupId)
-                    {
-                        g.FAQs.Add(faq);
-                        done = true;
-                        break;
-                    }
-                     
-                }
-            });
+            bool done = await FAQActions.PostFAQ(faq, done: false);            
             if (!done )
                 return BadRequest();
-            else return AG.Groups;
+            else
+                return AG.Groups;
         }
 
         [HttpDelete("{id}")] // vercnum em FAQ-i id-n u jnjum
         public async Task<string> DeleteFAQ(int id) 
         {
-            bool done = false;
-            await Task.Run(() => 
-            {               
-                foreach (Group g in AG.Groups)
-                {     
-                    foreach (FAQ f in g.FAQs)
-                    {
-                          if (f.Id == id)
-                          {
-                              g.FAQs.Remove(f);
-                            {
-                                done = true;
-                                break;
-                            }
-                          }
-                    };
-                    if (done)
-                        break;
-                };
-            });
-            if (!done) return "not exists";
-            else return "deleted";
-        }
-    
+            bool done = await FAQActions.DeleteFAQ(id, done: false);            
+            if (!done) 
+                return "not exists";
+            else
+                return "deleted";
+        }    
 
         [HttpPut("{id}")]
         public async Task<ActionResult<List<Group>>> PutFAQ(int id, FAQ fAQ) //
-        {
-            bool done = false;
+        {            
             if (fAQ.Answer == null || fAQ.Question == null || fAQ.GroupId <=0 || id<=0)
                 return BadRequest();
-
-            await Task.Run(() =>
-            {
-                          
-                foreach (Group g in AG.Groups)
-                {
-                   if (fAQ.GroupId == g.Id)
-                   {                       
-                       foreach (FAQ f in g.FAQs)
-                       {
-                         if (f.Id == id && f.GroupId == fAQ.GroupId)
-                         {
-                               f.Id = id;
-                               f.Question = fAQ.Question;
-                               f.Answer = fAQ.Answer;
-                                done = true;
-                                break;
-                         }
-                       };                       
-                   }
-                    if (done)
-                        break;
-                };
-            });
-            if (!done) return BadRequest(); 
-            else return AG.Groups;
+            bool done = await FAQActions.PutFAQ(id, fAQ, done: false);
+            if (!done)
+                return BadRequest(); 
+            else
+                return AG.Groups;
         } 
     }
 }

@@ -47,7 +47,7 @@ namespace FAQ2_Api.Models
     public static class MakeId
     {
         public static int NewId(List<IdAble> source)
-        {
+        {           
             int id = 1;
             if (source.Count == 0)
             {
