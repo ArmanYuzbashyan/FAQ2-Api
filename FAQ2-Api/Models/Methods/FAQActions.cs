@@ -34,7 +34,7 @@ namespace FAQ2_Api.Models.Methods
 
 
         //pagination 
-        public static async Task<Page> GetFAQsSearch(int p)
+        public static async Task<Page<FAQ>> GetFAQsSearch(int p)
         { // page size = 2
             int pagesize = 2;
             var All = await AG.GetAllFAQs();
@@ -43,8 +43,12 @@ namespace FAQ2_Api.Models.Methods
             {
                 ThisPage = All.Skip((p - 1) * pagesize).Take(pagesize);
             });
-            var ToReturn = new Page 
-                          { Pageinfo=ThisPage, PageNumber = p, PageCount = (All.Count + pagesize - 1) / pagesize };
+            var ToReturn = new Page <FAQ>
+                           {
+                                Pageinfo=ThisPage,
+                                PageNumber = p,
+                                PageCount = (All.Count + pagesize - 1) / pagesize
+                           };
             return ToReturn;
 
         }
@@ -55,10 +59,7 @@ namespace FAQ2_Api.Models.Methods
             var a = await AG.GetAllFAQs();
             await Task.Run(() =>
             {
-                var a1 = new List<IdAble> { };
-                foreach (FAQ f in a) { a1.Add(f); }
-
-                faq.Id = MakeId.NewId(a1);  // !!!!!  
+                faq.Id = a.Max(x => x.Id) + 1; 
 
                 foreach (Group g in AG.Groups)
                 {
@@ -95,10 +96,10 @@ namespace FAQ2_Api.Models.Methods
             });
             return done;
         }
-        public static async Task <bool> PutFAQ(int id, FAQ fAQ, bool done)
+        public static async Task <bool> PutFAQ(int id, FAQ fAQ)
         {
-            await Task.Run(() =>
-            {
+
+             await Task.FromResult(true);
 
                 foreach (Group g in AG.Groups)
                 {
@@ -111,16 +112,14 @@ namespace FAQ2_Api.Models.Methods
                                 f.Id = id;
                                 f.Question = fAQ.Question;
                                 f.Answer = fAQ.Answer;
-                                done = true;
-                                break;
+                                return await Task.FromResult(true);
                             }
-                        };
+                        }
                     }
-                    if (done)
-                        break;
-                };
-            });
-            return done;
+                    
+                }
+            
+            return false;
         }
     }
 }

@@ -59,7 +59,7 @@ namespace FAQ2_Api.Controllers
         {            
             if (fAQ.Answer == null || fAQ.Question == null || fAQ.GroupId <=0 || id<=0)
                 return BadRequest();
-            bool done = await FAQActions.PutFAQ(id, fAQ, done: false);
+            bool done = await FAQActions.PutFAQ(id, fAQ);
             if (!done)
                 return BadRequest(); 
             else

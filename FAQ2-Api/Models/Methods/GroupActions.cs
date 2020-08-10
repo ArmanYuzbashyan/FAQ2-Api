@@ -41,12 +41,7 @@ namespace FAQ2_Api.Models.Methods
 
             await Task.Run(() =>
             {
-                List<IdAble> IdAbleGroup = new List<IdAble> { };
-                foreach (Group g in AG.Groups)
-                {
-                    IdAbleGroup.Add(g);
-                }
-                group.Id = MakeId.NewId(IdAbleGroup);
+                group.Id = AG.Groups.Max(x => x.Id) + 1;
 
                 AG.Groups.Add(group);//(new Group { GroupName = group.GroupName; }); 
                 done = true;         // senc piti liner
