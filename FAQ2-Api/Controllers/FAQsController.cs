@@ -21,7 +21,7 @@ namespace FAQ2_Api.Controllers
         }
 
         [HttpGet("{p}")] // api/Faqs/"search", 
-        public async Task<ActionResult<Page>> GetFAQsSearch(int p)//string search)
+        public async Task<ActionResult<Page<FAQ>>> GetFAQsSearch(int p)//string search)
         {
             if (p <= 0)
                 return BadRequest();
