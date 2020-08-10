@@ -20,10 +20,15 @@ namespace FAQ2_Api.Controllers
             return await AG.GetAllFAQs(); //AG.GetAllFAQs-y metoda Context.cs-i mej
         }
 
-        [HttpGet("{search}")] // api/Faqs/"search", 
-        public async Task<ActionResult<List<FAQ>>> GetFAQsSearch(string search)
-        {            
-            return await FAQActions.GetFAQsSearch(search);
+        [HttpGet("{p}")] // api/Faqs/"search", 
+        public async Task<ActionResult<Page>> GetFAQsSearch(int p)//string search)
+        {
+            if (p <= 0)
+                return BadRequest();
+            var ToReturn = await FAQActions.GetFAQsSearch(p);
+            if (p > ToReturn.PageCount)
+                return BadRequest();
+            return ToReturn;
         }        
 
         [HttpPost] 

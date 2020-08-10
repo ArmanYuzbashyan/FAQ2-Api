@@ -21,16 +21,13 @@ namespace FAQ2_Api.Models
             var fAQs = new List<FAQ> { };
             await Task.Run(() =>
             {
-                Parallel.ForEach(AG.Groups, g =>
-               
+                foreach (Group g in AG.Groups)               
                 {
                     fAQs.AddRange(g.FAQs);
-                });
+                };
             });
             return fAQs;
-        }    
-       
+        }       
         
-    }
-    
+    }    
 }

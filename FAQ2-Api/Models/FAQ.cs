@@ -35,6 +35,12 @@ namespace FAQ2_Api.Models
         }
 
     }
+    public class Page
+    {
+        public IEnumerable<FAQ> Pageinfo { get; set; } = new List<FAQ> { };
+        public  int PageNumber { get; set; }
+        public int PageCount { get; set; }
+    }
     
 }
 

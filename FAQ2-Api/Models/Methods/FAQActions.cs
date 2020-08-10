@@ -9,28 +9,47 @@ namespace FAQ2_Api.Models.Methods
 {
     public static class FAQActions
     {
-        public static async Task<List<FAQ>> GetFAQsSearch(string search)
-        {
-            var faqs = await AG.GetAllFAQs();
-            var fq = new List<FAQ> { };
+        //public static async Task<List<FAQ>> GetFAQsSearch(string search)
+        //{
+        //    var faqs = await AG.GetAllFAQs();
+        //    var fq = new List<FAQ> { };
+        //    await Task.Run(() =>
+        //    {
+        //        foreach (FAQ f in faqs)
+        //        {
+
+        //            if (f.Question.MySearch(search, StringComparison.CurrentCultureIgnoreCase))
+        //                fq.Add(f);
+
+        //            // primitive variant
+        //            // var lowG = g.GroupName.ToLower();
+        //            // var lowS = search.ToLower();
+        //            // if (lowG.Contains(lowS))
+        //            //    gn.Add(g);
+
+        //        };
+        //    });
+        //    return fq;
+        //}
+
+
+        //pagination 
+        public static async Task<Page> GetFAQsSearch(int p)
+        { // page size = 2
+            int pagesize = 2;
+            var All = await AG.GetAllFAQs();
+            IEnumerable<FAQ> ThisPage = new List<FAQ> { };
             await Task.Run(() =>
             {
-                foreach (FAQ f in faqs)
-                {
-
-                    if (f.Question.MySearch(search, StringComparison.CurrentCultureIgnoreCase))
-                        fq.Add(f);
-
-                    // primitive variant
-                    // var lowG = g.GroupName.ToLower();
-                    // var lowS = search.ToLower();
-                    // if (lowG.Contains(lowS))
-                    //    gn.Add(g);
-
-                };
+                ThisPage = All.Skip((p - 1) * pagesize).Take(pagesize);
             });
-            return fq;
+            var ToReturn = new Page 
+                          { Pageinfo=ThisPage, PageNumber = p, PageCount = (All.Count + pagesize - 1) / pagesize };
+            return ToReturn;
+
         }
+
+
         public static async Task<bool> PostFAQ(FAQ faq, bool done)
         {
             var a = await AG.GetAllFAQs();
