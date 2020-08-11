@@ -27,6 +27,8 @@ namespace FAQ2_Api.Models.Methods
                         gn.Add(g);
 
                     // primitive variant
+
+
                     // var lowG = g.GroupName.ToLower();
                     // var lowS = search.ToLower();
                     // if (lowG.Contains(lowS))
