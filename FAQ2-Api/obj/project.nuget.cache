@@ -1,8 +1,15 @@
 {
   "version": 2,
-  "dgSpecHash": "9xqyZiZQ3CaNZInAEadlXmsEzuDxDyxHGSw/ZDtESGRYfIc+QB9EuFYF57zmr1/lmIt2hreNLU0z66EAEVf5hw==",
+  "dgSpecHash": "lkyOVDJjFMb028BDnqWU+1BrHJ3pB5SQEreHhR85bGqtLvaVIInVGqvNUCU74XVfplVtBUOME9i1ToIOXT9vCQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\Arman\\source\\repos\\FAQ2-Api\\FAQ2-Api\\FAQ2-Api.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\Arman\\.nuget\\packages\\microsoft.extensions.apidescription.server\\3.0.0\\microsoft.extensions.apidescription.server.3.0.0.nupkg.sha512",
+    "C:\\Users\\Arman\\.nuget\\packages\\microsoft.openapi\\1.1.4\\microsoft.openapi.1.1.4.nupkg.sha512",
+    "C:\\Users\\Arman\\.nuget\\packages\\swashbuckle.aspnetcore\\5.5.1\\swashbuckle.aspnetcore.5.5.1.nupkg.sha512",
+    "C:\\Users\\Arman\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\5.5.1\\swashbuckle.aspnetcore.swagger.5.5.1.nupkg.sha512",
+    "C:\\Users\\Arman\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\5.5.1\\swashbuckle.aspnetcore.swaggergen.5.5.1.nupkg.sha512",
+    "C:\\Users\\Arman\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\5.5.1\\swashbuckle.aspnetcore.swaggerui.5.5.1.nupkg.sha512"
+  ],
   "logs": []
 }
